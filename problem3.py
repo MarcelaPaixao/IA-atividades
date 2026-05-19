@@ -53,3 +53,6 @@ Custo = [65, 98, 150, 210, 340]
 D = [150, 200, 250, 300, 400]
 
 populacao = np.random.randint(low=0, high=4, size=(N, gene)) # pop_p
+
+
+https://docs.google.com/document/d/1-G-5WAKvZt1btJ1s073yOGV5yhgb_819b8Wjjpfr0U8/edit?usp=sharing
