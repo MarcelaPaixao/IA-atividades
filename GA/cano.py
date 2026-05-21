@@ -12,8 +12,9 @@ def fitness(ind):
         d = D[ind[i]]/1000
         q_max = (np.pi * d**2) * (d/4)**(2/3) * np.sqrt(0.005) / 0.013
 
-        if vazao/1000 > 0.75*q_max:
-            penalidade += 10000
+    #conenferir isso aqui
+    if vazao/1000 > 0.75*q_max:
+        penalidade = 10000
         
     return custo + penalidade
 
@@ -32,8 +33,8 @@ def crossover(pop):
     pop_i = []
 
     for i in range(N/2):
-        inds = np.random.choices(pop, k=2)
-        taxa = np.random.random()
+        inds = np.random.choice(pop, size=2)
+        taxa = np.random.normal()
 
         if taxa <= tx_crossover:
             ...
