@@ -38,7 +38,7 @@ def par_aleatorio(pop):
     return pop[np.random.randint(0, tam)], pop[np.random.randint(0, tam)]
 
 def GA(low, high, geracoes, tam_pop=100, dim=30):
-    pop_p = np.random.randint(low=low, high=high, size=(tam_pop, dim))
+    pop_p = np.random.uniform(low=low, high=high, size=(tam_pop, dim))
 
     for g in range(geracoes):
         pop_i = []
