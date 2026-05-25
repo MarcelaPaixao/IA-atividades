@@ -4,7 +4,7 @@ def fitness(individuo):
     penalidade = 0
     custo = 0
 
-    for i in range(len(individuo)):
+    for i in range(len(individuo)):        
         d = D[individuo[i]]/1000
         custo += Custo[individuo[i]] * Comp[i]
         q = Q[i]/1000
@@ -19,25 +19,63 @@ def fitness(individuo):
     
     return custo + penalidade
 
-def selecao(pop):
-    pass
+def selecao(pop, tam_pop):
+    pop_i = []
+    
+    while len(pop_i) < tam_pop:
+        i1 = pop[np.random.randint(0, tam_pop)]
+        i2 = pop[np.random.randint(0, tam_pop)]
+        
+        if fitness(i1) < fitness(i2): pop_i.append(i1)
+        else: pop_i.append(i2)
+
+    return np.array(pop_i)
+
+def crossover(pop, tx_cr, tam_pop):
+    pop_i = []
+    while  len(pop_i) < tam_pop:
+        p1 = pop[np.random.randint(0, tam_pop)]
+        p2 = pop[np.random.randint(0, tam_pop)]
+        
+        if np.random.rand() <= tx_cr:
+            idx = np.random.randint(0, len(p1))
+            pop_i.append(np.concatenate([p1[:idx], p2[idx:]]))
+            pop_i.append(np.concatenate([p2[:idx], p1[idx:]]))
+
+        else: 
+            pop_i.append(p1)
+            pop_i.append(p2)
+
+    return np.array(pop_i)
 
 def mutacao(pop, tx_m):
-    pass
+    pop_i = []
+    for ind in pop:
+        ind_m = ind.copy()
+        for i in range(len(ind_m)):
+            if np.random.rand() <= tx_m:
+                ind_m[i] = np.random.randint(0, 5)
+        
+        pop_i.append(ind_m)
 
-def crossover(pop, tx_cr):
-    pass
+    return np.array(pop_i)
+
 
 def GA(tam_pop, dim, geracoes, tx_cr, tx_m):
-    pop_p = np.random.randint(low=1, high=5, size=(tam_pop, dim))
+    pop_p = np.random.randint(low=0, high=5, size=(tam_pop, dim))
 
     for g in range(geracoes):
-        pop_i = selecao(pop_p)
-        pop_i = mutacao(pop_i, tx_m)
-        pop_i = crossover(pop_i, tx_cr)
+        selecionados = selecao(pop_p, tam_pop)
+        cruzados = crossover(selecionados, tx_cr, tam_pop)
+        mutados = mutacao(cruzados, tx_m)
         
-        pop_p = pop_i.copy()
-        print(fitness(min(pop_p, key=fitness)), g)
+        pop_p = mutados
+        
+        # m = min(pop_p, key=fitness)
+        # print(fitness(m), g)      
+
+    melhor = min(pop_p, key=fitness)
+    return fitness(melhor)
     
 
 Q = [2.5 * (i+1) for i in range(10)] # em L/s
@@ -47,3 +85,4 @@ Custo = [65, 98, 150, 210, 340] # em R$/m
 D = [150, 200, 250, 300, 400] # em mm
 
 melhor = GA(tam_pop=100, dim=10, geracoes=50, tx_cr=0.7, tx_m=0.1)
+print(melhor)
