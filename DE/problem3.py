@@ -16,7 +16,6 @@ def DE(low, high, N, D, G, F, Cr):
         for i in range(len(pop_p)):
             idx_permitidos = [idx for idx in range(len(pop_p)) if idx != i]
             r1, r2, r3 = np.random.choice(idx_permitidos, size=3, replace=False)
-            r2, r3 = np.random.choice(idx_permitidos, size=2, replace=False)
 
             I_r1 = pop_p[r1]           
             I_r2 = pop_p[r2]
@@ -27,7 +26,7 @@ def DE(low, high, N, D, G, F, Cr):
             V = np.clip(V, low, high)
 
             U = np.array([])
-            gene_obrigatorio = np.random.randint(len(I))
+            gene_obrigatorio = np.random.randint(0, len(I))
             for gene in range(len(I)):
                 if np.random.rand() <= Cr or gene == gene_obrigatorio: U = np.append(U, [V[gene]])
                 else: U = np.append(U, [I[gene]])
@@ -40,4 +39,4 @@ def DE(low, high, N, D, G, F, Cr):
     return fitness(melhor)
 
 
-print(DE(low=-32, high=32, N=100, D=30, G=100, F=0.4, Cr=0.9))
+print(DE(low=-32, high=32, N=100, D=30, G=300, F=0.4, Cr=0.9))

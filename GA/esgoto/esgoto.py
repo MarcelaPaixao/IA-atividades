@@ -1,4 +1,11 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
+Q = [2.5 * (i+1) for i in range(10)] # em L/s
+Comp = [20, 54, 98, 120, 34, 12, 88, 122, 33, 40] # em m
+
+Custo = [65, 98, 150, 210, 340] # em R$/m
+D = [150, 200, 250, 300, 400] # em mm
 
 def fitness(individuo):
     penalidade = 0
@@ -12,7 +19,7 @@ def fitness(individuo):
         A = (np.pi * d ** 2)/4
         Rh = d/4
 
-        q_max = (A * Rh ** (2/3) * np.sqrt(0.005))/0.0013
+        q_max = (A * Rh ** (2/3) * np.sqrt(0.005))/0.013
         
         if  q > 0.75 * q_max:
             penalidade += 10_000
@@ -63,6 +70,7 @@ def mutacao(pop, tx_m):
 
 def GA(tam_pop, dim, geracoes, tx_cr, tx_m):
     pop_p = np.random.randint(low=0, high=5, size=(tam_pop, dim))
+    historico = []
 
     for g in range(geracoes):
         selecionados = selecao(pop_p, tam_pop)
@@ -71,18 +79,22 @@ def GA(tam_pop, dim, geracoes, tx_cr, tx_m):
         
         pop_p = mutados
         
-        # m = min(pop_p, key=fitness)
-        # print(fitness(m), g)      
+        m = min(pop_p, key=fitness)
+        historico.append(fitness(m))
 
     melhor = min(pop_p, key=fitness)
-    return fitness(melhor)
-    
+    return fitness(melhor), historico
 
-Q = [2.5 * (i+1) for i in range(10)] # em L/s
-Comp = [20, 54, 98, 120, 34, 12, 88, 122, 33, 40] # em m
 
-Custo = [65, 98, 150, 210, 340] # em R$/m
-D = [150, 200, 250, 300, 400] # em mm
+melhor, historico = GA(tam_pop=100, dim=10, geracoes=50, tx_cr=0.7, tx_m=0.1)
+print(f"Menor custo: {melhor}")
 
-melhor = GA(tam_pop=100, dim=10, geracoes=50, tx_cr=0.7, tx_m=0.1)
-print(melhor)
+
+plt.figure(figsize=(8, 5)) # Opcional: Define o tamanho do gráfico
+plt.plot(historico, color='blue', marker='o', markersize=3) # Plota as linhas
+plt.title('Curva de Convergência do Algoritmo Genético')
+plt.xlabel('Gerações')
+plt.ylabel('Custo (Fitness)')
+plt.grid(True) # Coloca uma grade no fundo para facilitar a leitura
+# plt.show()
+plt.savefig("esgoto.png")
